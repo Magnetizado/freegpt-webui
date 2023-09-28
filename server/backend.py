@@ -1,6 +1,7 @@
 import re
+import openai
 from datetime import datetime
-from g4f import ChatCompletion
+from openai import ChatCompletion
 from flask import request, Response, stream_with_context
 from requests import get
 from server.config import special_instructions
@@ -30,6 +31,9 @@ class Backend_Api:
         conversation_id = request.json['conversation_id']
 
         try:
+            openai.api_base = https://gpt.thatlukinhasguy.xyz/v1
+            openai.api_key = 'not_here_lol'
+            
             jailbreak = request.json['jailbreak']
             model = request.json['model']
             messages = build_messages(jailbreak)
@@ -39,7 +43,7 @@ class Backend_Api:
                 model=model,
                 chatId=conversation_id,
                 messages=messages
-            )
+            )['choices'][0]['message']['content']
 
             return Response(stream_with_context(generate_stream(response, jailbreak)), mimetype='text/event-stream')
 
